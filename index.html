@@ -23,7 +23,7 @@
     en servidor, mueve el JS a un archivo externo.
   -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://static.wikia.nocookie.net; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
+        content="default-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i1.sndcdn.com https://i2.sndcdn.com; script-src 'unsafe-inline' https://w.soundcloud.com; frame-src https://w.soundcloud.com; connect-src https://api.soundcloud.com; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
@@ -755,10 +755,13 @@
 </head>
 <body>
 
-  <!-- MÚSICA DE FONDO -->
-  <audio id="bgMusic" loop>
-    <source src="background.mp3" type="audio/mpeg">
-  </audio>
+  <!-- MÚSICA DE FONDO — SoundCloud Widget (invisible) -->
+  <iframe id="scPlayer"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/alison_synths/space-echo&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"
+    style="display:none; width:0; height:0; border:none;"
+    allow="autoplay"
+    aria-hidden="true">
+  </iframe>
 
 
 <div class="cursor"       id="cursor"></div>
@@ -885,34 +888,54 @@
 
         <div class="slide active" id="slide-0">
           <img class="slide-img"
-               src="https://static.wikia.nocookie.net/evangelion/images/6/6f/Unit01.jpg"
-               alt="Evangelion Unit 01 — EVA-01 standard profile"
-               loading="eager">
-          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Unit 01 — Standard Configuration</div>
+               src="eva01-nge.jpg"
+               alt="EVA-01 — Neon Genesis Evangelion, armadura púrpura original"
+               loading="eager"
+               onerror="this.style.display='none';this.parentElement.querySelector('.slide-fallback').style.display='flex'">
+          <div class="slide-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:1rem;background:linear-gradient(135deg,#020d1a,#0a0020)">
+            <span style="font-family:'Share Tech Mono',monospace;color:#00f5ff;font-size:.8rem;letter-spacing:.2em;opacity:.6">EVA-01 · IMG 01</span>
+            <span style="font-family:'Orbitron',monospace;color:#4a6880;font-size:.65rem;letter-spacing:.15em">Sube eva01-nge.jpg al repo</span>
+          </div>
+          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Neon Genesis Evangelion — Armadura Test Type original</div>
         </div>
 
         <div class="slide" id="slide-1">
           <img class="slide-img"
-               src="https://static.wikia.nocookie.net/evangelion/images/3/39/Evangelion_Unit_01_NGE.png"
-               alt="EVA-01 — Neon Genesis Evangelion"
-               loading="lazy">
-          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Neon Genesis Evangelion</div>
+               src="eva01-rebuild.jpg"
+               alt="EVA-01 — Rebuild of Evangelion, diseño renovado"
+               loading="lazy"
+               onerror="this.style.display='none';this.parentElement.querySelector('.slide-fallback').style.display='flex'">
+          <div class="slide-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:1rem;background:linear-gradient(135deg,#1a0020,#0d0030)">
+            <span style="font-family:'Share Tech Mono',monospace;color:#9d00ff;font-size:.8rem;letter-spacing:.2em;opacity:.6">EVA-01 · IMG 02</span>
+            <span style="font-family:'Orbitron',monospace;color:#4a6880;font-size:.65rem;letter-spacing:.15em">Sube eva01-rebuild.jpg al repo</span>
+          </div>
+          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Rebuild of Evangelion — Diseño renovado, más esbelto</div>
         </div>
 
         <div class="slide" id="slide-2">
           <img class="slide-img"
-               src="https://static.wikia.nocookie.net/evangelion/images/b/b6/Eva01_berserk.jpg"
-               alt="EVA-01 — Berserk Mode awakening"
-               loading="lazy">
-          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Berserk Mode — Awakening</div>
+               src="eva01-berserk.jpg"
+               alt="EVA-01 — Modo Berserk, control autónomo sin piloto"
+               loading="lazy"
+               onerror="this.style.display='none';this.parentElement.querySelector('.slide-fallback').style.display='flex'">
+          <div class="slide-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:1rem;background:linear-gradient(135deg,#1a0000,#200010)">
+            <span style="font-family:'Share Tech Mono',monospace;color:#ff00a0;font-size:.8rem;letter-spacing:.2em;opacity:.6">EVA-01 · IMG 03</span>
+            <span style="font-family:'Orbitron',monospace;color:#4a6880;font-size:.65rem;letter-spacing:.15em">Sube eva01-berserk.jpg al repo</span>
+          </div>
+          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Modo Berserk — El alma de Yui toma el control</div>
         </div>
 
         <div class="slide" id="slide-3">
           <img class="slide-img"
-               src="https://static.wikia.nocookie.net/evangelion/images/a/a0/Unit-01_Rebuild.jpg"
-               alt="EVA-01 — Rebuild of Evangelion"
-               loading="lazy">
-          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; Rebuild of Evangelion</div>
+               src="eva01-space.jpg"
+               alt="EVA-01 flotando en el espacio — End of Evangelion"
+               loading="lazy"
+               onerror="this.style.display='none';this.parentElement.querySelector('.slide-fallback').style.display='flex'">
+          <div class="slide-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:1rem;background:linear-gradient(135deg,#000510,#001020)">
+            <span style="font-family:'Share Tech Mono',monospace;color:#00f5ff;font-size:.8rem;letter-spacing:.2em;opacity:.6">EVA-01 · IMG 04</span>
+            <span style="font-family:'Orbitron',monospace;color:#4a6880;font-size:.65rem;letter-spacing:.15em">Sube eva01-space.jpg al repo</span>
+          </div>
+          <div class="slide-caption">EVA-01 &nbsp;·&nbsp; End of Evangelion — Memorial eterno de la humanidad</div>
         </div>
 
       </div><!-- /marco del slideshow -->
@@ -1414,46 +1437,63 @@ document.querySelectorAll('.bg-type-btn').forEach(btn => {
 bgColor1.addEventListener('input', applyBg);
 bgColor2.addEventListener('input', applyBg);
 
-  /* ── MÚSICA DE FONDO ───────────────────────────────── */
-/*
-   [_]  SANSiTA-
-   |*|  beep boop — música activada
-   [_]
-   | |
-   |_|
-*/
-  const bgMusic = document.getElementById('bgMusic');
+  /* ── MÚSICA DE FONDO — SoundCloud Widget API ────────────── */
+  /*
+     [_]  SANSiTA- beep boop — Space Echo · Alison Synths
+     |*|  Controlado via SC Widget API (postMessage)
+     [_]
+     | |
+     |_|
+  */
+  const scFrame  = document.getElementById('scPlayer');
   const musicBtn = document.getElementById('musicBtn');
   let musicPlaying = false;
-  bgMusic.volume = 0.3;
+  let scReady      = false;
 
-  function toggleMusic() {
-    if (musicPlaying) {
-      bgMusic.pause();
-      musicBtn.textContent = '🎵';
-      musicBtn.classList.remove('playing');
-      musicBtn.title = 'Play music';
-    } else {
-      bgMusic.play().catch(() => {});
-      musicBtn.textContent = '🔇';
-      musicBtn.classList.add('playing');
-      musicBtn.title = 'Stop music';
+  /* Carga la API de SoundCloud de forma diferida */
+  const scScript  = document.createElement('script');
+  scScript.src    = 'https://w.soundcloud.com/player/api.js';
+  scScript.onload = () => {
+    const widget = SC.Widget(scFrame);
+    widget.bind(SC.Widget.Events.READY, () => {
+      scReady = true;
+      widget.setVolume(30);
+    });
+    /* Loop manual cuando la pista termina */
+    widget.bind(SC.Widget.Events.FINISH, () => {
+      widget.seekTo(0);
+      widget.play();
+    });
+
+    function toggleMusic() {
+      if (!scReady) return;
+      if (musicPlaying) {
+        widget.pause();
+        musicBtn.textContent = '🎵';
+        musicBtn.classList.remove('playing');
+        musicBtn.title = 'Play music';
+      } else {
+        widget.play();
+        musicBtn.textContent = '🔇';
+        musicBtn.classList.add('playing');
+        musicBtn.title = 'Stop music';
+      }
+      musicPlaying = !musicPlaying;
     }
-    musicPlaying = !musicPlaying;
-  }
 
-  musicBtn.addEventListener('click', toggleMusic);
+    musicBtn.addEventListener('click', toggleMusic);
 
-  // Intento de reproducción automática en la primera interacción
-  document.addEventListener('click', function startMusic(e) {
-    if (e.target.id === 'musicBtn') return;
-    bgMusic.play().then(() => {
+    /* Autoplay en la primera interacción del usuario */
+    document.addEventListener('click', function startMusic(e) {
+      if (e.target.id === 'musicBtn' || !scReady || musicPlaying) return;
+      widget.play();
       musicPlaying = true;
       musicBtn.textContent = '🔇';
       musicBtn.classList.add('playing');
-    }).catch(() => {});
-    document.removeEventListener('click', startMusic);
-  }, { once: true });
+      document.removeEventListener('click', startMusic);
+    }, { once: true });
+  };
+  document.head.appendChild(scScript);
 
 /* ── MOTOR DE FONDO — canvas dinámico ──────────────
    SANSiTA- tres capas de efectos:
