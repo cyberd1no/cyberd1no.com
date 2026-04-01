@@ -23,7 +23,7 @@
     en servidor, mueve el JS a un archivo externo.
   -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://static.wikia.nocookie.net https://i1.sndcdn.com https://i2.sndcdn.com; script-src 'unsafe-inline' https://w.soundcloud.com; frame-src https://w.soundcloud.com; connect-src https://api.soundcloud.com; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
+        content="default-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://static.wikia.nocookie.net; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
@@ -755,13 +755,10 @@
 </head>
 <body>
 
-  <!-- MÚSICA DE FONDO — SoundCloud Widget (invisible) -->
-  <iframe id="scPlayer"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/alison_synths/space-echo&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"
-    style="display:none; width:0; height:0; border:none;"
-    allow="autoplay"
-    aria-hidden="true">
-  </iframe>
+  <!-- MÚSICA DE FONDO -->
+  <audio id="bgMusic" loop>
+    <source src="background.mp3" type="audio/mpeg">
+  </audio>
 
 
 <div class="cursor"       id="cursor"></div>
@@ -1417,63 +1414,46 @@ document.querySelectorAll('.bg-type-btn').forEach(btn => {
 bgColor1.addEventListener('input', applyBg);
 bgColor2.addEventListener('input', applyBg);
 
-  /* ── MÚSICA DE FONDO — SoundCloud Widget API ────────────── */
-  /*
-     [_]  SANSiTA- beep boop — Space Echo · Alison Synths
-     |*|  Controlado via SC Widget API (postMessage)
-     [_]
-     | |
-     |_|
-  */
-  const scFrame  = document.getElementById('scPlayer');
+  /* ── MÚSICA DE FONDO ───────────────────────────────── */
+/*
+   [_]  SANSiTA-
+   |*|  beep boop — música activada
+   [_]
+   | |
+   |_|
+*/
+  const bgMusic = document.getElementById('bgMusic');
   const musicBtn = document.getElementById('musicBtn');
   let musicPlaying = false;
-  let scReady      = false;
+  bgMusic.volume = 0.3;
 
-  /* Carga la API de SoundCloud de forma diferida */
-  const scScript  = document.createElement('script');
-  scScript.src    = 'https://w.soundcloud.com/player/api.js';
-  scScript.onload = () => {
-    const widget = SC.Widget(scFrame);
-    widget.bind(SC.Widget.Events.READY, () => {
-      scReady = true;
-      widget.setVolume(30);
-    });
-    /* Loop manual cuando la pista termina */
-    widget.bind(SC.Widget.Events.FINISH, () => {
-      widget.seekTo(0);
-      widget.play();
-    });
-
-    function toggleMusic() {
-      if (!scReady) return;
-      if (musicPlaying) {
-        widget.pause();
-        musicBtn.textContent = '🎵';
-        musicBtn.classList.remove('playing');
-        musicBtn.title = 'Play music';
-      } else {
-        widget.play();
-        musicBtn.textContent = '🔇';
-        musicBtn.classList.add('playing');
-        musicBtn.title = 'Stop music';
-      }
-      musicPlaying = !musicPlaying;
+  function toggleMusic() {
+    if (musicPlaying) {
+      bgMusic.pause();
+      musicBtn.textContent = '🎵';
+      musicBtn.classList.remove('playing');
+      musicBtn.title = 'Play music';
+    } else {
+      bgMusic.play().catch(() => {});
+      musicBtn.textContent = '🔇';
+      musicBtn.classList.add('playing');
+      musicBtn.title = 'Stop music';
     }
+    musicPlaying = !musicPlaying;
+  }
 
-    musicBtn.addEventListener('click', toggleMusic);
+  musicBtn.addEventListener('click', toggleMusic);
 
-    /* Autoplay en la primera interacción del usuario */
-    document.addEventListener('click', function startMusic(e) {
-      if (e.target.id === 'musicBtn' || !scReady || musicPlaying) return;
-      widget.play();
+  // Intento de reproducción automática en la primera interacción
+  document.addEventListener('click', function startMusic(e) {
+    if (e.target.id === 'musicBtn') return;
+    bgMusic.play().then(() => {
       musicPlaying = true;
       musicBtn.textContent = '🔇';
       musicBtn.classList.add('playing');
-      document.removeEventListener('click', startMusic);
-    }, { once: true });
-  };
-  document.head.appendChild(scScript);
+    }).catch(() => {});
+    document.removeEventListener('click', startMusic);
+  }, { once: true });
 
 /* ── MOTOR DE FONDO — canvas dinámico ──────────────
    SANSiTA- tres capas de efectos:
